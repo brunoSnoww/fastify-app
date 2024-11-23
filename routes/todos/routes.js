@@ -51,4 +51,24 @@ module.exports = async function todoRoutes (fastify, _opts) {
       return todo
     }
   })
+
+  fastify.route({
+    method: 'PUT',
+    url: '/:id',
+    schema: {
+      params: fastify.getSchema('schema:todo:read:params'),
+      body: fastify.getSchema('schema:todo:update:body')
+    },
+    handler: async function updateTodo (request, reply) {
+      const res = await this.mongoDataSource.updateTodo(
+        request.params.id,
+        request.body
+      )
+      if (res.modifiedCount === 0) {
+        reply.code(204)
+        return { error: 'Not found' }
+      }
+      reply.code(204)
+    }
+  })
 }
