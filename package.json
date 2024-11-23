@@ -9,8 +9,12 @@
   "scripts": {
     "pretest": "npm run lint",
     "test": "tap \"test/**/*.test.js\"",
-    "start": "fastify start -l info app.js",
-    "dev": "fastify start -w -l info -P app.js"
+    "start": "fastify start --options app.js",
+    "dev": "npm run start -- --watch --pretty-logs --debug",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "mongo:start": "docker run -d -p 27017:27017 --rm --name fastify-mongo mongo:5",
+    "mongo:stop": "docker container stop fastify-mongo"
   },
   "repository": {
     "type": "git",
@@ -25,12 +29,15 @@
   "homepage": "https://github.com/brunoSnoww/fastify-app#readme",
   "dependencies": {
     "@fastify/autoload": "^5.0.0",
-    "@fastify/sensible": "^4.1.0",
-    "fastify": "^4.0.0",
-    "fastify-cli": "^4.4.0",
-    "fastify-plugin": "^3.0.0",
-    "lint": "standard",
-    "lint:fix": "standard --fix"
+    "@fastify/cors": "^8.5.0",
+    "@fastify/env": "^4.0.0",
+    "@fastify/mongodb": "^6.2.0",
+    "@fastify/sensible": "^5.1.0",
+    "@fastify/swagger": "^8.15.0",
+    "@fastify/swagger-ui": "^1.9.0",
+    "fastify": "^4.2.0",
+    "fastify-cli": "^4.2.0",
+    "fastify-plugin": "^3.0.0"
   },
   "devDependencies": {
     "standard": "^17.1.2",

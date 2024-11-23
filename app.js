@@ -4,22 +4,33 @@ const path = require('path')
 const AutoLoad = require('@fastify/autoload')
 
 module.exports = async function (fastify, opts) {
-  // Place here your custom code!
+  fastify.register(AutoLoad, {
+    dir: path.join(__dirname, 'schemas'),
+    indexPattern: /^loader.js$/i
+  })
 
-  // Do not touch the following lines
+  await fastify.register(require('./configs/config'))
 
-  // This loads all plugins defined in plugins
-  // those should be support plugins that are reused
-  // through your application
   fastify.register(AutoLoad, {
     dir: path.join(__dirname, 'plugins'),
+    dirNameRoutePrefix: false,
+    ignorePattern: /.*.no-load\.js/,
+    // ignorePattern: /^((?!load\.js).)*$/,
+    indexPattern: /^no$/i,
+    options: fastify.config
+  })
+
+  fastify.register(AutoLoad, {
+    dir: path.join(__dirname, 'routes'),
+    indexPattern: /.*routes(\.js|\.cjs)$/i,
+    ignorePattern: /.*\.js/,
+    autoHooksPattern: /.*hooks(\.js|\.cjs)$/i,
+    autoHooks: true,
+    cascadeHooks: true,
     options: Object.assign({}, opts)
   })
 
-  // This loads all plugins defined in routes
-  // define your routes in one of these
-  fastify.register(AutoLoad, {
-    dir: path.join(__dirname, 'routes'),
-    options: Object.assign({}, opts)
-  })
+  fastify.log.info('Config loaded %o', fastify.config)
 }
+
+module.exports.options = require('./configs/server-options')
