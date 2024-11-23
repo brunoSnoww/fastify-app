@@ -21,6 +21,31 @@ module.exports = fp(async function todoAutoHooks (fastify, opts) {
         modifiedAt: now
       })
       return insertedId
+    },
+    async listTodos ({
+      skip = 0,
+      limit = 50,
+      projection = {},
+      filter = {}
+    } = {}) {
+      if (filter.title) {
+        filter.title = new RegExp(filter.title, 'i')
+      } else {
+        delete filter.title
+      }
+      const todoDocuments = await todos
+        .find(filter, {
+          projection: { ...projection, _id: 0 },
+          limit,
+          skip
+        })
+        .toArray()
+
+      return todoDocuments
+    },
+    async countTodos (filter = {}) {
+      const totalCount = await todos.countDocuments(filter)
+      return totalCount
     }
   })
 })
