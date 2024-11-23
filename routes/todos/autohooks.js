@@ -46,6 +46,13 @@ module.exports = fp(async function todoAutoHooks (fastify, opts) {
     async countTodos (filter = {}) {
       const totalCount = await todos.countDocuments(filter)
       return totalCount
+    },
+    async readTodo (id, projection = {}) {
+      const todo = await todos.findOne(
+        { _id: new fastify.mongo.ObjectId(id) },
+        { projection: { ...projection, _id: 0 } }
+      )
+      return todo
     }
   })
 })

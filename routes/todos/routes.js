@@ -32,4 +32,23 @@ module.exports = async function todoRoutes (fastify, _opts) {
       return { data: todos, totalCount }
     }
   })
+
+  fastify.route({
+    method: 'GET',
+    url: '/:id',
+    schema: {
+      params: fastify.getSchema('schema:todo:read:params'),
+      response: {
+        200: fastify.getSchema('schema:todo')
+      }
+    },
+    handler: async function readTodo (request, reply) {
+      const todo = await this.mongoDataSource.readTodo(request.params.id)
+      if (!todo) {
+        reply.code(404)
+        return { error: 'Todo not found' }
+      }
+      return todo
+    }
+  })
 }
