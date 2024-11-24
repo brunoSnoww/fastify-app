@@ -3,5 +3,6 @@ module.exports = {
     customOptions: {
       removeAdditional: 'all'
     }
-  }
+  },
+  logger: true
 }

@@ -9,4 +9,5 @@ module.exports = fp(async function (fastify, opts) {
   fastify.addSchema(require('./todo.json'))
   fastify.addSchema(require('./get-todo.json'))
   fastify.addSchema(require('./update-todo.json'))
+  fastify.addSchema(require('./status-param.json'))
 })
